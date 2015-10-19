@@ -1,3 +1,5 @@
+//Jonny's version
+
 program NewGame;
 
 uses crt,sysutils,dateutils;

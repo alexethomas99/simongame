@@ -1,4 +1,4 @@
-//Jonny's version
+//Alex's version
 
 program NewGame;
 

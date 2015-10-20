@@ -90,6 +90,7 @@ begin
    Sequence:=('');
    UserInput:=('');
    writeln('You took ', rtime,' seconds on that round.');
+   writeln('Hit enter to advance to the next round.');
    readln;
    end;
    if userinput<>sequence then

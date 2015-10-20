@@ -1,117 +1,144 @@
-//Alex's version
-
-program NewGame;
+program WorkingSimonGame;
 
 uses crt,sysutils,dateutils;
-var a, ColourVal: Integer;
-    Answer: String;
-    ToTime, FromTime: TDateTime;
-    Score: Integer;
+var
+    Level, Colour, Score, Count, Rtime, Ttime, Highscore, Dly: Integer;
+    Play, Sequence, UserInput, GameStartInput: String;
+    TtimeStart, TtimeEnd, RtimeStart, RtimeEnd: TDateTime;
 
-procedure Flash;
+procedure Beginning; forward;
+procedure InstructionPage;
 begin
-    writeln('##########');
-    writeln('##########');
-    writeln('##########');
-    writeln('##########');
-    writeln('##########');
-
-    delay(10000);
-
-    clrscr;
+ write('After Each Instruction Appears, Press Enter If You Understand.');
+ readln;
+ write('When The Game Begins, One Colour Will Appear.');
+ readln;
+ write('Memorize The Colour And Answer Appropriately e.g. Red = R.');
+ readln;
+ write('If That Answer Is Correct Then You Will Advance To The Next Level.');
+ readln;
+ write('The Next Level Will Display One More Colour Then Previously.');
+ readln;
+ write('Input All Colour Shown In Order To Progress.');
+ readln;
+ write('Getting Even One Colour In The Sequence Wrong Will End The Game.');
+ readln();
+ clrscr;
+ Beginning();
 end;
-
-procedure Colours;
+procedure Game;
 begin
- randomize;
- ColourVal:=random(4)+1;
- if (ColourVal=1) then
+  begin
+   TtimeStart:= now;
+   Level:=2;
+   Count:=1;
+   Dly:=1000;
+   randomize;
+   Play:='true';
+   while Play='true' do
    begin
-   TextColor(Red);
-   Flash();
-   Answer:='R';
-   end
- else if (ColourVal=2) then
+   repeat
+   RtimeStart:= now;
+   Colour:=random(4)+1;
+   case colour of
+   1: begin
+   textbackground(Red);
+   clrscr;
+   delay(Dly);
+   textbackground(black);
+   clrscr;
+      end;
+   2: begin
+   textbackground(blue);
+   clrscr;
+   delay(Dly);
+   textbackground(black);
+   clrscr;
+      end;
+   3: begin
+   textbackground(green);
+   clrscr;
+   delay(Dly);
+   textbackground(black);
+   clrscr;
+      end;
+   4: begin
+   textbackground(yellow);
+   clrscr;
+   delay(Dly);
+   textbackground(black);
+   clrscr;
+      end;
+   end;
+   sequence:=sequence+inttostr(colour);
+   textbackground(black);
+   delay(200);
+   clrscr;
+   count:=count+1;
+    until count=level;
+
+   textcolor(white);
+   writeln('Red=1, Blue=2, Green=3, Yellow=4');
+   readln(UserInput);
+   RtimeEnd:=now;
+   Rtime:= secondsbetween(RtimeEnd,RtimeStart);
+   if UserInput=Sequence then
    begin
-   TextColor(Green);
-   Flash();
-   Answer:='G';
-   end
- else if (ColourVal=3) then
-   begin
-   TextColor(Blue);
-   Flash();
-   Answer:='B';
-   end
- else if (ColourVal=4) then
-   begin
-   TextColor(Yellow);
-   Flash();
-   Answer:='Y';
-   end
+   Level:=Level+1;
+   Count:=Level-Count;
+   Dly:=Dly-50;
+   Sequence:=('');
+   UserInput:=('');
+   writeln('You took ', rtime,' seconds on that round.');
+   readln;
+   end;
+   if userinput<>sequence then
+   Play:='false';
+   end;
+   TtimeEnd:= now;
+   Ttime:= secondsbetween(TtimeEnd,TtimeStart);
+   Score:=Level-2;
+   writeln('Oops! The correct answer was ',Sequence, '.');
+   writeln('Your total time was ', Ttime,' seconds.');
+   writeln('Your score was ',Score, '.');
+   readln;
+   clrscr;
+   Sequence:=(''); //Without this, the first round after restarting has an answer above one integer.
+   Beginning();
+  end;
 
 end;
-
 procedure Beginning;
 begin
+  writeln('  _____ _                          _____                      ');
+  writeln(' / ____(_)                        / ____|                     ');
+  writeln('| (___  _ _ __ ___   ___  _ __   | |  __  __ _ _ __ ___   ___ ');
+  writeln(' \___ \| |  _ ` _ \ / _ \|  _ \  | | |_ |/ _` |  _ ` _ \ / _ \');
+  writeln(' ____) | | | | | | | (_) | | | | | |__| | (_| | | | | | |  __/');
+  writeln('|_____/|_|_| |_| |_|\___/|_| |_|  \_____|\__,_|_| |_| |_|\___|');
+  writeln('Please press the appropriate integer... ');
 
-  writeln(' _______ _________ _______  _______  _              _______  _______  _______  _______');
-  writeln('(  ____ \\__   __/(       )(  ___  )( (    /|     (  ____ \(  ___  )(       )(  ____ \  ') ;
-  writeln('| (    \/   ) (   | () () || (   ) ||  \  ( |     | (    \/| (   ) || () () || (    \/  ')  ;
-  writeln('| (_____    | |   | || || || |   | ||   \ | |     | |      | (___) || || || || (__      ')   ;
-  writeln('(_____  )   | |   | |(_)| || |   | || (\ \) |     | | ____ |  ___  || |(_)| ||  __)     ')    ;
-  writeln('      ) |   | |   | |   | || |   | || | \   |     | | \_  )| (   ) || |   | || (        ')     ;
-  writeln('/\____) |___) (___| )   ( || (___) || )  \  |     | (___) || )   ( || )   ( || (____/\  ')      ;
-  writeln('\_______)\_______/|/     \|(_______)|/    )_)     (_______)|/     \||/     \|(_______/  ')       ;
-
-
-
-  delay(5000);
-
-
+  writeln('     1: Play ');
+  writeln('     2: Instructions ');
+  readln(GameStartInput);
+  if GameStartInput='1' then
+  begin
+  Game();
+  end
+  else if GameStartInput='2' then
+  begin
   clrscr;
-
-repeat for a := 1 to 1 DO;
-     begin
-      textcolor(random(15)+1);
-      write(random(2));
-      end;
-until keypressed;
-
-delay(1);
-
-  clrscr;
-  writeln('_______ _________ _______  _______  _              _______  _______  _______  _______');
-  writeln('(  ____ \\__   __/(       )(  ___  )( (    /|     (  ____ \(  ___  )(       )(  ____ \  ') ;
-  writeln('| (    \/   ) (   | () () || (   ) ||  \  ( |     | (    \/| (   ) || () () || (    \/  ')  ;
-  writeln('| (_____    | |   | || || || |   | ||   \ | |     | |      | (___) || || || || (__      ')   ;
-  writeln('(_____  )   | |   | |(_)| || |   | || (\ \) |     | | ____ |  ___  || |(_)| ||  __)     ')    ;
-  writeln('      ) |   | |   | |   | || |   | || | \   |     | | \_  )| (   ) || |   | || (        ')     ;
-  writeln('/\____) |___) (___| )   ( || (___) || )  \  |     | (___) || )   ( || )   ( || (____/\  ')      ;
-  writeln('\_______)\_______/|/     \|(_______)|/    )_)     (_______)|/     \||/     \|(_______/  ')       ;
-
-
-  delay(2000);
-
-  writeln('Made by the king of ascii');
-
-  delay(1000);
-  writeln('Aka.the king of swag');
-
-  delay(1000);
-
-  writeln('So Team Wonderwoman');
+  InstructionPage();
+  end
+  else
+  begin
+  writeln ('Invalid Input'); //Start screen validation
   readln();
-
-  delay(1000);
-
-  writeln('Press Enter to start the game');
-  readln;
-
   clrscr;
-end;
-begin
   Beginning();
-  Colours();
-  Flash();
+  end;
+
+end;
+begin;
+Beginning();
 end.

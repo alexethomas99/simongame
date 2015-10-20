@@ -1,3 +1,5 @@
+//Jonathan's version
+
 program WorkingSimonGame;
 
 uses crt,sysutils,dateutils;
